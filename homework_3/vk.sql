@@ -91,9 +91,10 @@ CREATE TABLE goods (
 -- Таблица лайков
 CREATE TABLE likes (
   id int unsigned NOT NULL AUTO_INCREMENT,
-  user_id int unsigned DEFAULT NULL,
-  message_id int unsigned DEFAULT NULL,
-  media_id int unsigned DEFAULT NULL,
+  from_user_id unsigned NOT NULL,
+  to_user_id int unsigned DEFAULT NULL,
+  to_message_id int unsigned DEFAULT NULL,
+  to_media_id int unsigned DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
