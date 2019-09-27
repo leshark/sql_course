@@ -197,6 +197,32 @@ CREATE TABLE channels_messages (
   edited_at DATETIME DEFAULT NOW() ON UPDATE NOW()
 );
 
+
+DROP TABLE IF EXISTS groups_and_chats_messages;
+CREATE TABLE groups_and_chats_messages (
+  id SERIAL PRIMARY KEY,
+  from_group_id BIGINT UNSIGNED NULL,
+  from_chat_id BIGINT UNSIGNED NULL,
+  from_user_id BIGINT UNSIGNED NULL,
+  reply_to_user_id BIGINT UNSIGNED NULL,
+  message TEXT NOT NULL,
+  delivered BOOLEAN,
+  media_id BIGINT UNSIGNED NULL,
+  CONSTRAINT groups_and_chats_messages_from_group_id_fk FOREIGN KEY (from_group_id) REFERENCES `groups`(id)
+    ON DELETE SET NULL,
+  CONSTRAINT groups_and_chats_messages_from_chat_id_fk  FOREIGN KEY (from_chat_id) REFERENCES chats(id)
+    ON DELETE SET NULL,
+  CONSTRAINT groups_and_chats_messages_from_user_id_fk  FOREIGN KEY (from_user_id) REFERENCES users(id)
+    ON DELETE SET NULL,
+  CONSTRAINT groups_and_chats_messages_reply_to_user_id_fk  FOREIGN KEY (reply_to_user_id) REFERENCES users(id)
+    ON DELETE SET NULL,
+  CONSTRAINT groups_and_chats_messages_media_id_fk FOREIGN KEY (media_id) REFERENCES media(id)
+    ON DELETE SET NULL,
+  INDEX groups_and_chats_messages_from_user_id_idx (from_user_id) COMMENT 'you can search messages by user',
+  created_at DATETIME DEFAULT NOW(),
+  edited_at DATETIME DEFAULT NOW() ON UPDATE NOW()
+);
+
 DELIMITER //
 
 DROP TRIGGER IF EXISTS group_id_and_chat_id_check;
@@ -208,34 +234,6 @@ BEGIN
 END //
 
 DELIMITER ;
-
-DROP TABLE IF EXISTS groups_and_chats_messages;
-CREATE TABLE groups_and_chats_messages (
-  id SERIAL PRIMARY KEY,
-  from_group_id BIGINT UNSIGNED NULL,
-  from_chat_id BIGINT UNSIGNED NULL,
-  from_user_id BIGINT UNSIGNED NULL,
-  to_user_id BIGINT UNSIGNED NULL COMMENT 'If this field is speciefied message is from chat and from group either way',
-  reply_to_user_id BIGINT UNSIGNED NULL,
-  message TEXT NOT NULL,
-  delivered BOOLEAN,
-  media_id BIGINT UNSIGNED NULL,
-  CONSTRAINT groups_and_chats_messages_from_group_id_fk FOREIGN KEY (from_group_id) REFERENCES `groups`(id)
-    ON DELETE SET NULL,
-  CONSTRAINT groups_and_chats_messages_from_chat_id_fk  FOREIGN KEY (from_chat_id) REFERENCES chats(id)
-    ON DELETE SET NULL,
-  CONSTRAINT groups_and_chats_messages_from_user_id_fk  FOREIGN KEY (from_user_id) REFERENCES users(id)
-    ON DELETE SET NULL,
-  CONSTRAINT groups_and_chats_messages_to_user_id_fk FOREIGN KEY (to_user_id) REFERENCES users(id)
-    ON DELETE SET NULL,
-  CONSTRAINT groups_and_chats_messages_reply_to_user_id_fk  FOREIGN KEY (reply_to_user_id) REFERENCES users(id)
-    ON DELETE SET NULL,
-  CONSTRAINT groups_and_chats_messages_media_id_fk FOREIGN KEY (media_id) REFERENCES media(id)
-    ON DELETE SET NULL,
-  INDEX groups_and_chats_messages_from_user_id_idx (from_user_id) COMMENT 'you can search messages by user',
-  created_at DATETIME DEFAULT NOW(),
-  edited_at DATETIME DEFAULT NOW() ON UPDATE NOW()
-);
 
 /* for educational purposes only
 
