@@ -1,6 +1,6 @@
 -- Данная база данных представляет собой упрощённую модель телеграма
 -- TODO: calls, forwards
--- auther: leshark
+-- author: leshark
 
 CREATE DATABASE IF NOT EXISTS telegram;
 USE telegram;
